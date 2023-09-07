@@ -1,3 +1,20 @@
+let firstNumber;
+let secondNumber;
+let operator;
+
+function operate(first, op, second) {
+  switch (op) {
+    case '+':
+      return add(first, second);
+    case '-':
+      return subtract(first, second);
+    case '*':
+      return multiply(first, second);
+    default:
+      return divide(first, second);
+  }
+}
+
 // MATH OPERATIONS
 function add(a, b) {
   return a + b;
