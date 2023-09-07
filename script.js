@@ -6,9 +6,9 @@ function operate(first, op, second) {
   switch (op) {
     case '+':
       return add(first, second);
-    case '-':
+    case '\u2212':
       return subtract(first, second);
-    case '*':
+    case '\u00d7':
       return multiply(first, second);
     default:
       return divide(first, second);
