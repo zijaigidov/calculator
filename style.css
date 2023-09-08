@@ -3,3 +3,50 @@
   padding: 0;
   margin: 0;
 }
+
+body {
+  min-height: 100vh;
+}
+
+/* SHARED STYLES */
+
+body,
+#display-container,
+.row {
+  display: flex;
+}
+
+body,
+#display-container {
+  justify-content: center;
+  align-items: center;
+}
+
+/* CALCULATOR */
+
+#calculator {
+  border-radius: 3px;
+}
+
+/* RESULT */
+
+#display-container {
+  height: 100px;
+}
+
+#display {
+  font-size: 28px;
+}
+
+/* BUTTONS */
+
+button {
+  font-size: 24px;
+  width: 100px;
+  height: 80px;
+}
+
+#calculator,
+#display-container {
+  border: 1px solid black;
+}
