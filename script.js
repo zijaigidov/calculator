@@ -4,6 +4,7 @@ let secondNumber;
 
 const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
+const clearButton = document.getElementById('clear');
 
 let displayValue = display.textContent;
 
@@ -12,6 +13,10 @@ let displayValue = display.textContent;
 digitButtons.forEach((btn) =>
   btn.addEventListener('click', (e) => digitClicked(e.target.textContent)),
 );
+clearButton.addEventListener('click', () => {
+  clearDisplay();
+  updateDisplay('0');
+});
 
 // CALCULATOR FUNCTIONS
 
