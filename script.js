@@ -1,6 +1,34 @@
 let firstNumber;
-let secondNumber;
 let operator;
+let secondNumber;
+
+const display = document.getElementById('display');
+const digitButtons = document.querySelectorAll('.digit');
+
+let displayValue = display.textContent;
+
+// EVENT LISTENERS
+
+digitButtons.forEach((btn) =>
+  btn.addEventListener('click', (e) => digitClicked(e.target.textContent)),
+);
+
+// CALCULATOR FUNCTIONS
+
+function digitClicked(digit) {
+  if (display.textContent === '0') clearDisplay();
+  updateDisplay(digit);
+}
+
+function updateDisplay(input) {
+  display.textContent += input;
+  displayValue += input;
+}
+
+function clearDisplay() {
+  display.textContent = '';
+  displayValue = '';
+}
 
 function operate(first, op, second) {
   switch (op) {
@@ -16,6 +44,7 @@ function operate(first, op, second) {
 }
 
 // MATH OPERATIONS
+
 function add(a, b) {
   return a + b;
 }
