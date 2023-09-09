@@ -70,6 +70,11 @@ function clearInput() {
   input = '';
 }
 
+function isProperExpression(expression) {
+  const pattern = /[\d]+[+\u2212\u00d7\u00f7][\d]+/;
+  return expression.match(pattern) ? true : false;
+}
+
 function operate(first, op, second) {
   switch (op) {
     case '+':
