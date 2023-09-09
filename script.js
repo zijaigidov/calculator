@@ -6,7 +6,7 @@ const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
 const clearButton = document.getElementById('clear');
 
-let displayValue = display.textContent;
+let input = display.textContent;
 
 // EVENT LISTENERS
 
@@ -15,24 +15,36 @@ digitButtons.forEach((btn) =>
 );
 clearButton.addEventListener('click', () => {
   clearDisplay();
+  clearInput();
   updateDisplay('0');
+  updateInput('0');
 });
 
 // CALCULATOR FUNCTIONS
 
 function digitClicked(digit) {
-  if (display.textContent === '0') clearDisplay();
+  if (display.textContent === '0') {
+    clearDisplay();
+    clearInput();
+  }
   updateDisplay(digit);
+  updateInput(digit);
 }
 
-function updateDisplay(input) {
-  display.textContent += input;
-  displayValue += input;
+function updateDisplay(char) {
+  display.textContent += char;
 }
 
 function clearDisplay() {
   display.textContent = '';
-  displayValue = '';
+}
+
+function updateInput(char) {
+  input += char;
+}
+
+function clearInput() {
+  input = '';
 }
 
 function operate(first, op, second) {
