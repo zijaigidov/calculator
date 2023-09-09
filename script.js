@@ -4,6 +4,7 @@ let secondNumber;
 
 const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
+const operatorButtons = document.querySelectorAll('.operator');
 const clearButton = document.getElementById('clear');
 
 let input = display.textContent;
@@ -12,6 +13,9 @@ let input = display.textContent;
 
 digitButtons.forEach((btn) =>
   btn.addEventListener('click', (e) => digitClicked(e.target.textContent)),
+);
+operatorButtons.forEach((btn) =>
+  btn.addEventListener('click', (e) => operatorClicked(e.target.textContent)),
 );
 clearButton.addEventListener('click', () => {
   clearDisplay();
@@ -26,9 +30,28 @@ function digitClicked(digit) {
   if (display.textContent === '0') {
     clearDisplay();
     clearInput();
+  } else if (isOperator(getLastInput())) {
+    clearDisplay();
   }
+
   updateDisplay(digit);
   updateInput(digit);
+}
+
+function operatorClicked(operator) {
+  if (isOperator(getLastInput())) {
+    return;
+  }
+  input += operator;
+}
+
+function isOperator(char) {
+  const operators = '+\u2212\u00d7\u00f7';
+  return operators.includes(char) ? true : false;
+}
+
+function getLastInput() {
+  return input.slice(-1);
 }
 
 function updateDisplay(char) {
