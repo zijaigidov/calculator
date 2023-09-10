@@ -72,7 +72,7 @@ function setDisplay(text) {
 }
 
 function isProperExpression(expression) {
-  const pattern = /[\d]+[+\u2212\u00d7\u00f7][\d]+/;
+  const pattern = /\d+[+\-x\/](?:\d)?(?:\.)?\d+/;
   return expression.match(pattern) ? true : false;
 }
 
@@ -127,6 +127,11 @@ function hasDecimal(str) {
 }
 
 function decimalClicked() {
+  if (isOperator(getLastInput(input))) {
+    setInput(input + '.');
+    setDisplay('.');
+    return;
+  }
   if (!hasDecimal(display.textContent)) {
     setInput(input + '.');
     setDisplay(display.textContent + '.');
