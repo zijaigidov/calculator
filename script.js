@@ -8,6 +8,7 @@ const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
 const operatorButtons = document.querySelectorAll('.operator');
 const equalsButton = document.getElementById('equals');
+const deleteButton = document.getElementById('delete');
 const clearButton = document.getElementById('clear');
 
 let input = display.textContent;
@@ -24,6 +25,7 @@ equalsButton.addEventListener('click', () => {
   if (isProperExpression(input)) showResult();
   else showError();
 });
+deleteButton.addEventListener('click', deleteClicked);
 clearButton.addEventListener('click', () => {
   setInput('0');
   setDisplay('0');
@@ -91,6 +93,17 @@ function getOperator(input) {
   for (let operator of OPERATORS) {
     if (input.includes(operator)) return operator;
   }
+}
+
+function deleteClicked() {
+  if (input.length === 1) {
+    setInput('0');
+    setDisplay('0');
+    return;
+  }
+
+  input = input.slice(0, input.length - 1);
+  setDisplay(input);
 }
 
 function operate(first, op, second) {
