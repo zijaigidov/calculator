@@ -7,6 +7,7 @@ let secondNumber;
 const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
 const operatorButtons = document.querySelectorAll('.operator');
+const decimalButton = document.getElementById('decimal');
 const equalsButton = document.getElementById('equals');
 const deleteButton = document.getElementById('delete');
 const clearButton = document.getElementById('clear');
@@ -21,6 +22,7 @@ digitButtons.forEach((btn) =>
 operatorButtons.forEach((btn) =>
   btn.addEventListener('click', (e) => operatorClicked(e.target.textContent)),
 );
+decimalButton.addEventListener('click', decimalClicked);
 equalsButton.addEventListener('click', () => {
   if (isProperExpression(input)) showResult();
   else showError();
@@ -116,6 +118,17 @@ function operate(first, op, second) {
       return multiply(first, second);
     default:
       return divide(first, second);
+  }
+}
+
+function hasDecimal(str) {
+  return str.includes('.');
+}
+
+function decimalClicked() {
+  if (!hasDecimal(display.textContent)) {
+    setInput(input + '.');
+    setDisplay(display.textContent + '.');
   }
 }
 
