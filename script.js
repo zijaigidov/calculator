@@ -80,7 +80,8 @@ function showResult() {
   operator = getOperator(input);
   [firstNumber, secondNumber] = input.split(operator);
   [firstNumber, secondNumber] = [+firstNumber, +secondNumber];
-  const result = operate(firstNumber, operator, secondNumber);
+  let result = operate(firstNumber, operator, secondNumber);
+  result = round(result, 3);
 
   setInput(result);
   setDisplay(result);
@@ -133,6 +134,11 @@ function decimalClicked() {
 }
 
 // MATH OPERATIONS
+
+function round(float, decimals = 0) {
+  const multiplier = 10 ** decimals;
+  return Math.round((float + Number.EPSILON) * multiplier) / multiplier;
+}
 
 function add(a, b) {
   return a + b;
