@@ -1,3 +1,5 @@
+const OPERATORS = ['+', '\u2212', '\u00d7', '\u00f7'];
+
 let firstNumber;
 let operator;
 let secondNumber;
@@ -5,6 +7,7 @@ let secondNumber;
 const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
 const operatorButtons = document.querySelectorAll('.operator');
+const equalsButton = document.getElementById('equals');
 const clearButton = document.getElementById('clear');
 
 let input = display.textContent;
@@ -17,6 +20,10 @@ digitButtons.forEach((btn) =>
 operatorButtons.forEach((btn) =>
   btn.addEventListener('click', (e) => operatorClicked(e.target.textContent)),
 );
+equalsButton.addEventListener('click', () => {
+  if (isProperExpression(input)) showResult();
+  else showError();
+});
 clearButton.addEventListener('click', () => {
   clearDisplay();
   clearInput();
@@ -39,15 +46,15 @@ function digitClicked(digit) {
 }
 
 function operatorClicked(operator) {
-  if (isOperator(getLastInput())) {
-    return;
+  if (isOperator(getLastInput())) return;
+  else if (isProperExpression(input)) {
+    showResult();
   }
   input += operator;
 }
 
 function isOperator(char) {
-  const operators = '+\u2212\u00d7\u00f7';
-  return operators.includes(char) ? true : false;
+  return OPERATORS.includes(char);
 }
 
 function getLastInput() {
@@ -73,6 +80,31 @@ function clearInput() {
 function isProperExpression(expression) {
   const pattern = /[\d]+[+\u2212\u00d7\u00f7][\d]+/;
   return expression.match(pattern) ? true : false;
+}
+
+function showResult() {
+  operator = getOperator(input);
+  [firstNumber, secondNumber] = input.split(operator);
+  [firstNumber, secondNumber] = [+firstNumber, +secondNumber];
+  const result = operate(firstNumber, operator, secondNumber);
+
+  clearInput();
+  updateInput(result);
+  clearDisplay();
+  updateDisplay(result);
+}
+
+function showError() {
+  clearDisplay();
+  updateDisplay('ERROR');
+
+  clearInput();
+}
+
+function getOperator(input) {
+  for (let operator of OPERATORS) {
+    if (input.includes(operator)) return operator;
+  }
 }
 
 function operate(first, op, second) {
