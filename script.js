@@ -25,24 +25,22 @@ equalsButton.addEventListener('click', () => {
   else showError();
 });
 clearButton.addEventListener('click', () => {
-  clearDisplay();
-  clearInput();
-  updateDisplay('0');
-  updateInput('0');
+  setInput('0');
+  setDisplay('0');
 });
 
 // CALCULATOR FUNCTIONS
 
 function digitClicked(digit) {
-  if (display.textContent === '0') {
-    clearDisplay();
-    clearInput();
+  if (input === '0') {
+    setInput('');
+    setDisplay('');
   } else if (isOperator(getLastInput())) {
-    clearDisplay();
+    setDisplay('');
   }
 
-  updateDisplay(digit);
-  updateInput(digit);
+  setInput(input + digit);
+  setDisplay(display.textContent + digit);
 }
 
 function operatorClicked(operator) {
@@ -61,20 +59,12 @@ function getLastInput() {
   return input.slice(-1);
 }
 
-function updateDisplay(char) {
-  display.textContent += char;
+function setInput(text) {
+  input = text.toString();
 }
 
-function clearDisplay() {
-  display.textContent = '';
-}
-
-function updateInput(char) {
-  input += char;
-}
-
-function clearInput() {
-  input = '';
+function setDisplay(text) {
+  display.textContent = text.toString();
 }
 
 function isProperExpression(expression) {
@@ -88,17 +78,13 @@ function showResult() {
   [firstNumber, secondNumber] = [+firstNumber, +secondNumber];
   const result = operate(firstNumber, operator, secondNumber);
 
-  clearInput();
-  updateInput(result);
-  clearDisplay();
-  updateDisplay(result);
+  setInput(result);
+  setDisplay(result);
 }
 
 function showError() {
-  clearDisplay();
-  updateDisplay('ERROR');
-
-  clearInput();
+  setInput('');
+  setDisplay('ERROR');
 }
 
 function getOperator(input) {
