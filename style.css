@@ -19,21 +19,21 @@ html {
   background: linear-gradient(white, #a5e997);
 }
 
-body {
+#calculator-form {
   min-height: 100vh;
 }
 
 /* SHARED STYLES */
 
-body,
+#calculator-form,
 #btn-container,
-#display-container,
+#display,
 .row {
   display: flex;
 }
 
-body,
-#display-container {
+#calculator-form,
+#display {
   justify-content: center;
   align-items: center;
 }
@@ -46,14 +46,11 @@ body,
   border-radius: 25px;
 }
 
-/* RESULT */
-
-#display-container {
-  height: 128px;
-}
+/* DISPLAY */
 
 #display {
   font-size: 28px;
+  height: 128px;
 }
 
 /* BUTTONS */
