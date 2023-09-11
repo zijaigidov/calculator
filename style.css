@@ -50,7 +50,7 @@ html {
 
 #display {
   font-size: 28px;
-  height: 128px;
+  height: 148px;
 }
 
 /* BUTTONS */
@@ -69,8 +69,8 @@ button {
   font-family: inherit;
   font-weight: inherit;
   background-color: var(--secondary-color);
-  width: 70px;
-  height: 70px;
+  width: 76px;
+  height: 76px;
   border: none;
   border-radius: 10px;
 }
