@@ -46,6 +46,10 @@ button {
   height: 80px;
 }
 
+.flex-grow {
+  flex: 1;
+}
+
 #calculator,
 #display-container {
   border: 1px solid black;
