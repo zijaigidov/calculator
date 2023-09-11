@@ -1,8 +1,4 @@
-const OPERATORS = ['+', '\u2212', '\u00d7', '\u00f7'];
-
-let firstNumber;
-let operator;
-let secondNumber;
+const OPERATORS = ['+', '\u2212', '\u00d7', '\u00f7']; // ['+', '−', '×', '÷']
 
 const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
@@ -12,7 +8,7 @@ const equalsButton = document.getElementById('equals');
 const deleteButton = document.getElementById('delete');
 const clearButton = document.getElementById('clear');
 
-let input = display.textContent;
+let userInput = display.textContent;
 
 // EVENT LISTENERS
 
@@ -23,65 +19,74 @@ operatorButtons.forEach((btn) =>
   btn.addEventListener('click', (e) => operatorClicked(e.target.textContent)),
 );
 decimalButton.addEventListener('click', decimalClicked);
-equalsButton.addEventListener('click', () => {
-  if (isProperExpression(input)) showResult();
-  else showError();
-});
+equalsButton.addEventListener('click', equalsClicked);
 deleteButton.addEventListener('click', deleteClicked);
-clearButton.addEventListener('click', () => {
-  setInput('0');
-  setDisplay('0');
-});
+clearButton.addEventListener('click', clearClicked);
 
-// CALCULATOR FUNCTIONS
+// CALCULATOR BUTTONS
 
 function digitClicked(digit) {
-  if (input === '0') {
+  if (userInput.includes('ERROR')) return true;
+  else if (userInput === '0') {
     setInput('');
     setDisplay('');
-  } else if (isOperator(getLastInput())) {
-    setDisplay('');
-  }
+  } else if (isOperator(getLastInput())) setDisplay('');
 
-  setInput(input + digit);
+  setInput(userInput + digit);
   setDisplay(display.textContent + digit);
 }
 
 function operatorClicked(operator) {
   if (isOperator(getLastInput())) return;
-  else if (isProperExpression(input)) {
+  else if (isProperExpression(userInput)) {
+    if (userInput.includes('ERROR')) return;
     showResult();
   }
-  input += operator;
+  userInput += operator;
 }
 
-function isOperator(char) {
-  return OPERATORS.includes(char);
+function decimalClicked() {
+  if (isOperator(getLastInput(userInput))) {
+    setInput(userInput + '.');
+    setDisplay('.');
+    return;
+  }
+  if (!hasDecimal(display.textContent)) {
+    setInput(userInput + '.');
+    setDisplay(display.textContent + '.');
+  }
 }
 
-function getLastInput() {
-  return input.slice(-1);
+function equalsClicked() {
+  if (isProperExpression(userInput)) showResult();
+  else showError();
 }
 
-function setInput(text) {
-  input = text.toString();
+function deleteClicked() {
+  if (userInput.length === 1) {
+    setInput('0');
+    setDisplay('0');
+    return;
+  }
+
+  userInput = userInput.slice(0, userInput.length - 1);
+  setDisplay(userInput);
 }
 
-function setDisplay(text) {
-  display.textContent = text.toString();
+function clearClicked() {
+  setInput('0');
+  setDisplay('0');
 }
 
-function isProperExpression(expression) {
-  const pattern = /\d+[+\-x\/](?:\d)?(?:\.)?\d+/;
-  return expression.match(pattern) ? true : false;
-}
+// MISCELLANEOUS
 
 function showResult() {
-  operator = getOperator(input);
-  [firstNumber, secondNumber] = input.split(operator);
-  [firstNumber, secondNumber] = [+firstNumber, +secondNumber];
-  let result = operate(firstNumber, operator, secondNumber);
-  result = round(result, 3);
+  let operator = getOperator(userInput);
+  let numbers = userInput.split(operator);
+  numbers = numbers.map((num) => +num);
+
+  let result = operate(numbers[0], operator, numbers[1]);
+  if (typeof result === 'number') result = round(result, 3);
 
   setInput(result);
   setDisplay(result);
@@ -92,21 +97,35 @@ function showError() {
   setDisplay('ERROR');
 }
 
-function getOperator(input) {
+function isProperExpression(expression) {
+  const pattern = /\d+[+\u2212\u00d7\u00f7](?:\d)?(?:\.)?\d+/;
+  return expression.match(pattern) ? true : false;
+}
+
+function isOperator(char) {
+  return OPERATORS.includes(char);
+}
+
+function getOperator(str) {
   for (let operator of OPERATORS) {
-    if (input.includes(operator)) return operator;
+    if (str.includes(operator)) return operator;
   }
 }
 
-function deleteClicked() {
-  if (input.length === 1) {
-    setInput('0');
-    setDisplay('0');
-    return;
-  }
+function hasDecimal(str) {
+  return str.includes('.');
+}
 
-  input = input.slice(0, input.length - 1);
-  setDisplay(input);
+function setDisplay(text) {
+  display.textContent = text.toString();
+}
+
+function setInput(text) {
+  userInput = text.toString();
+}
+
+function getLastInput() {
+  return userInput.slice(-1);
 }
 
 function operate(first, op, second) {
@@ -119,22 +138,6 @@ function operate(first, op, second) {
       return multiply(first, second);
     default:
       return divide(first, second);
-  }
-}
-
-function hasDecimal(str) {
-  return str.includes('.');
-}
-
-function decimalClicked() {
-  if (isOperator(getLastInput(input))) {
-    setInput(input + '.');
-    setDisplay('.');
-    return;
-  }
-  if (!hasDecimal(display.textContent)) {
-    setInput(input + '.');
-    setDisplay(display.textContent + '.');
   }
 }
 
