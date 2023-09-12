@@ -10,59 +10,59 @@
       src="https://kit.fontawesome.com/25300ee56d.js"
       crossorigin="anonymous"
     ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main>
-      <form id="calculator-form">
-        <article id="calculator">
-          <section id="display">0</section>
-          <section id="btn-container">
-            <div class="row">
-              <button id="clear" data-key="c" class="flex-grow" type="button">
-                AC
-              </button>
-              <button
-                id="delete"
-                data-key="Backspace"
-                class="flex-grow"
-                type="button"
-              >
-                DEL
-              </button>
-              <button class="operator" data-key="÷" type="button">÷</button>
-            </div>
-            <div class="row">
-              <button class="digit" data-key="7" type="button">7</button>
-              <button class="digit" data-key="8" type="button">8</button>
-              <button class="digit" data-key="9" type="button">9</button>
-              <button class="operator" data-key="×" type="button">×</button>
-            </div>
-            <div class="row">
-              <button class="digit" data-key="4" type="button">4</button>
-              <button class="digit" data-key="5" type="button">5</button>
-              <button class="digit" data-key="6" type="button">6</button>
-              <button class="operator" data-key="+" type="button">+</button>
-            </div>
-            <div class="row">
-              <button class="digit" data-key="1" type="button">1</button>
-              <button class="digit" data-key="2" type="button">2</button>
-              <button class="digit" data-key="3" type="button">3</button>
-              <button class="operator" data-key="−" type="button">−</button>
-            </div>
-            <div class="row">
-              <button class="digit flex-grow" data-key="0" type="button">
-                0
-              </button>
-              <button id="decimal" data-key="." type="button">.</button>
-              <button id="equals" data-key="=" type="button">=</button>
-            </div>
-          </section>
-        </article>
-      </form>
+      <article id="calculator">
+        <section id="screen">
+          <section id="last-expression"></section>
+          <section id="current-expression">0</section>
+        </section>
+        <section id="btn-container">
+          <div class="row">
+            <button id="clear-btn" class="btn flex-grow" type="button">
+              AC
+            </button>
+            <button id="delete-btn" class="btn flex-grow" type="button">
+              DEL
+            </button>
+            <button class="btn operator-btn" type="button">÷</button>
+          </div>
+          <div class="row">
+            <button class="btn digit-btn" type="button">7</button>
+            <button class="btn digit-btn" type="button">8</button>
+            <button class="btn digit-btn" type="button">9</button>
+            <button class="btn operator-btn" type="button">×</button>
+          </div>
+          <div class="row">
+            <button class="btn digit-btn" type="button">4</button>
+            <button class="btn digit-btn" type="button">5</button>
+            <button class="btn digit-btn" type="button">6</button>
+            <button class="btn operator-btn" type="button">+</button>
+          </div>
+          <div class="row">
+            <button class="btn digit-btn" type="button">1</button>
+            <button class="btn digit-btn" type="button">2</button>
+            <button class="btn digit-btn" type="button">3</button>
+            <button class="btn operator-btn" type="button">−</button>
+          </div>
+          <div class="row">
+            <button class="btn digit-btn flex-grow" type="button">0</button>
+            <button id="point-btn" class="btn" type="button">.</button>
+            <button id="equals-btn" class="btn" type="button">=</button>
+          </div>
+        </section>
+      </article>
     </main>
     <footer>
-      <span>Copyright &copy; 2023 Zija Igidov</span>
+      Copyright &copy; 2023 Zija Igidov
       <a
         href="https://github.com/zijaigidov"
         target="_blank"

@@ -1,227 +1,119 @@
-const OPERATORS = ['+', '−', '×', '÷'];
-const KEYS = [
-  '0',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '.',
-  '+',
-  '−',
-  '×',
-  '÷',
-  '=',
-  'Enter',
-  'c',
-  'Backspace',
-];
+let firstOperand = null;
+let secondOperand = null;
+let currentOperator = null;
+let toResetScreen = false;
 
-const display = document.getElementById('display');
-const digitButtons = document.querySelectorAll('.digit');
-const operatorButtons = document.querySelectorAll('.operator');
-const decimalButton = document.getElementById('decimal');
-const equalsButton = document.getElementById('equals');
-const deleteButton = document.getElementById('delete');
-const clearButton = document.getElementById('clear');
-
-let userInput = display.textContent;
-
-// EVENT LISTENERS
+const currentExpression = document.getElementById('current-expression');
+const lastExpression = document.getElementById('last-expression');
+const digitButtons = document.querySelectorAll('.digit-btn');
+const operatorButtons = document.querySelectorAll('.operator-btn');
+const decimalButton = document.getElementById('point-btn');
+const equalsButton = document.getElementById('equals-btn');
+const deleteButton = document.getElementById('delete-btn');
+const clearButton = document.getElementById('clear-btn');
 
 digitButtons.forEach((btn) =>
-  btn.addEventListener('click', (e) => digitClicked(e.target.textContent)),
+  btn.addEventListener('click', () => addDigit(btn.textContent)),
 );
 operatorButtons.forEach((btn) =>
-  btn.addEventListener('click', (e) => operatorClicked(e.target.textContent)),
+  btn.addEventListener('click', () => addOperator(btn.textContent)),
 );
-decimalButton.addEventListener('click', decimalClicked);
-equalsButton.addEventListener('click', equalsClicked);
-deleteButton.addEventListener('click', deleteClicked);
-clearButton.addEventListener('click', clearClicked);
+decimalButton.addEventListener('click', addPoint);
+equalsButton.addEventListener('click', evaluate);
+deleteButton.addEventListener('click', deleteChar);
+clearButton.addEventListener('click', clear);
+window.addEventListener('keydown', keyClicked);
 
-document.addEventListener('keydown', (e) => keyDowned(e));
-document.addEventListener('keyup', (e) => keyUpped(e));
-
-// EVENT FUNCTIONS
-
-function digitClicked(digit) {
-  if (userInput.includes('ERROR')) return true;
-  else if (userInput === '0') {
-    setInput('');
-    setDisplay('');
-  } else if (isOperator(getLastInput())) setDisplay('');
-
-  setInput(userInput + digit);
-  setDisplay(display.textContent + digit);
+function addDigit(digit) {
+  if (currentExpression.textContent === '0' || toResetScreen) resetScreen();
+  currentExpression.textContent += digit;
 }
 
-function operatorClicked(operator) {
-  if (isOperator(getLastInput())) return;
-  else if (isProperExpression(userInput)) {
-    if (userInput.includes('ERROR')) return;
-    showResult();
+function addOperator(operator) {
+  if (toResetScreen) resetScreen();
+  if (currentOperator) evaluate();
+  firstOperand = currentExpression.textContent;
+  currentOperator = operator;
+  lastExpression.textContent = `${firstOperand} ${currentOperator}`;
+  toResetScreen = true;
+}
+
+function addPoint() {
+  if (toResetScreen) {
+    resetScreen();
+    currentExpression.textContent = '0';
   }
-  userInput += operator;
+  if (currentExpression.textContent.includes('.')) return;
+
+  currentExpression.textContent += '.';
 }
 
-function decimalClicked() {
-  if (isOperator(getLastInput(userInput))) {
-    setInput(userInput + '.');
-    setDisplay('.');
+function deleteChar() {
+  if (currentExpression.textContent.length === 1) return;
+  currentExpression.textContent = currentExpression.textContent
+    .toString()
+    .slice(0, -1);
+}
+
+function clear() {
+  currentExpression.textContent = '0';
+  lastExpression.textContent = '';
+  firstOperand = '';
+  secondOperand = '';
+  currentOperator = null;
+}
+
+function resetScreen() {
+  currentExpression.textContent = '';
+  toResetScreen = false;
+}
+
+function evaluate() {
+  if (currentOperator === null || toResetScreen) return;
+  if (currentOperator === '÷' && currentExpression.textContent === '0') {
+    alert('ERROR: You cannot divide by zero.');
     return;
   }
-  if (!hasDecimal(display.textContent)) {
-    setInput(userInput + '.');
-    setDisplay(display.textContent + '.');
-  }
+  secondOperand = currentExpression.textContent;
+  currentExpression.textContent = roundResult(
+    operate(+firstOperand, currentOperator, +secondOperand),
+    3,
+  );
+  lastExpression.textContent = `${firstOperand} ${currentOperator} ${secondOperand} =`;
+  currentOperator = null;
 }
 
-function equalsClicked() {
-  if (isProperExpression(userInput)) showResult();
-  else showError();
-}
-
-function deleteClicked() {
-  if (userInput.length === 1) {
-    setInput('0');
-    setDisplay('0');
-    return;
-  }
-
-  userInput = userInput.slice(0, userInput.length - 1);
-  setDisplay(userInput);
-}
-
-function clearClicked() {
-  setInput('0');
-  setDisplay('0');
-}
-
-function keyDowned(event) {
+function keyClicked(event) {
   let key = event.key;
-  key = convertKey(key);
-
-  if (KEYS.includes(key)) {
-    const button = document.querySelector(`[data-key="${key}"]`);
-    button.classList.add('btn-hover');
-    executeKey(key);
-  }
+  if (0 <= key && key <= 9) addDigit(key);
+  if (key === '=' || key === 'Enter') evaluate();
+  if (key === 'Backspace') deleteChar();
+  if (key === 'Escape') clear();
+  if (['+', '-', 'x', '*', '/'].includes(key))
+    addOperator(convertOperator(key));
 }
 
-function keyUpped(event) {
-  let key = event.key;
-  key = convertKey(key);
-
-  if (KEYS.includes(key)) {
-    const button = document.querySelector(`[data-key="${key}"]`);
-    button.classList.remove('btn-hover');
-  }
+function convertOperator(pressedOperator) {
+  if (pressedOperator === '+') return '+';
+  if (pressedOperator === '-') return '−';
+  if (pressedOperator === 'x' || pressedOperator === '*') return '×';
+  if (pressedOperator === '/') return '÷';
 }
 
-// MISCELLANEOUS
-
-function showResult() {
-  let operator = getOperator(userInput);
-  let numbers = userInput.split(operator);
-  numbers = numbers.map((num) => +num);
-
-  let result = operate(numbers[0], operator, numbers[1]);
-  if (typeof result === 'number') result = round(result, 3);
-
-  setInput(result);
-  setDisplay(result);
-}
-
-function showError() {
-  setInput('');
-  setDisplay('ERROR');
-}
-
-function isProperExpression(expression) {
-  const pattern = /\d+[+−×÷](?:\d)?(?:\.)?\d+/;
-  return expression.match(pattern) ? true : false;
-}
-
-// converts the key that the user pressed to the proper key (e.g. '/' -> '÷')
-function convertKey(pressedKey) {
-  if (pressedKey === '-') return '−';
-  if (pressedKey === 'x' || pressedKey === '*') return '×';
-  if (pressedKey === '/') return '÷';
-  if (pressedKey === 'Enter') return '=';
-  return pressedKey;
-}
-
-function executeKey(key) {
-  if (key === '=') {
-    equalsClicked();
-    return;
-  }
-  if (key === 'Backspace') {
-    deleteClicked();
-    return;
-  }
-  if (key === '.') {
-    decimalClicked();
-    return;
-  }
-  if (key === 'c') {
-    clearClicked();
-    return;
-  }
-  if (OPERATORS.includes(key)) {
-    operatorClicked(key);
-    return;
-  }
-  digitClicked(key);
-}
-
-function isOperator(char) {
-  return OPERATORS.includes(char);
-}
-
-function getOperator(str) {
-  for (let operator of OPERATORS) {
-    if (str.includes(operator)) return operator;
-  }
-}
-
-function hasDecimal(str) {
-  return str.includes('.');
-}
-
-function setDisplay(text) {
-  display.textContent = text.toString();
-}
-
-function setInput(text) {
-  userInput = text.toString();
-}
-
-function getLastInput() {
-  return userInput.slice(-1);
-}
-
-function operate(first, op, second) {
+function operate(a, op, b) {
   switch (op) {
     case '+':
-      return add(first, second);
+      return add(a, b);
     case '−':
-      return subtract(first, second);
+      return subtract(a, b);
     case '×':
-      return multiply(first, second);
+      return multiply(a, b);
     default:
-      return divide(first, second);
+      return divide(a, b);
   }
 }
 
-// MATH OPERATIONS
-
-function round(float, decimals = 0) {
+function roundResult(float, decimals = 0) {
   const multiplier = 10 ** decimals;
   return Math.round((float + Number.EPSILON) * multiplier) / multiplier;
 }
