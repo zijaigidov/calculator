@@ -20,23 +20,30 @@ html {
   background: linear-gradient(white, #a5e997);
 }
 
-#calculator-form {
-  min-height: 100vh;
+body {
+  height: 100vh;
 }
 
 /* SHARED STYLES */
-
-#calculator-form,
+body,
 #btn-container,
 #display,
-.row {
+.row,
+footer {
   display: flex;
 }
 
-#calculator-form,
-#display {
+body,
+#display,
+footer {
   justify-content: center;
   align-items: center;
+}
+
+body,
+#btn-container,
+footer {
+  flex-direction: column;
 }
 
 /* CALCULATOR */
@@ -58,7 +65,6 @@ html {
 /* BUTTONS */
 
 #btn-container {
-  flex-direction: column;
   gap: 12px;
 }
 
@@ -92,4 +98,24 @@ button:hover {
 
 .flex-grow {
   flex: 1;
+}
+
+/* FOOTER */
+
+footer {
+  position: absolute;
+  bottom: 0;
+  gap: 8px;
+  color: black;
+  height: 120px;
+}
+
+footer a {
+  color: black;
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+footer a:hover {
+  transform: scale(1.5) rotate(360deg);
 }

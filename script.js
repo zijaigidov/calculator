@@ -23,7 +23,7 @@ equalsButton.addEventListener('click', equalsClicked);
 deleteButton.addEventListener('click', deleteClicked);
 clearButton.addEventListener('click', clearClicked);
 
-// CALCULATOR BUTTONS
+// EVENT FUNCTIONS
 
 function digitClicked(digit) {
   if (userInput.includes('ERROR')) return true;
