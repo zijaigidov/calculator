@@ -91,7 +91,7 @@ button#equals {
   background: var(--special-color);
 }
 
-button:hover {
+.btn-hover {
   transform: scale(1.025);
   filter: brightness(95%);
 }

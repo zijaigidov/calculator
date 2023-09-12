@@ -1,4 +1,25 @@
-const OPERATORS = ['+', '\u2212', '\u00d7', '\u00f7']; // ['+', '−', '×', '÷']
+const OPERATORS = ['+', '−', '×', '÷'];
+const KEYS = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '.',
+  '+',
+  '−',
+  '×',
+  '÷',
+  '=',
+  'Enter',
+  'c',
+  'Backspace',
+];
 
 const display = document.getElementById('display');
 const digitButtons = document.querySelectorAll('.digit');
@@ -22,6 +43,9 @@ decimalButton.addEventListener('click', decimalClicked);
 equalsButton.addEventListener('click', equalsClicked);
 deleteButton.addEventListener('click', deleteClicked);
 clearButton.addEventListener('click', clearClicked);
+
+document.addEventListener('keydown', (e) => keyDowned(e));
+document.addEventListener('keyup', (e) => keyUpped(e));
 
 // EVENT FUNCTIONS
 
@@ -78,6 +102,27 @@ function clearClicked() {
   setDisplay('0');
 }
 
+function keyDowned(event) {
+  let key = event.key;
+  key = convertKey(key);
+
+  if (KEYS.includes(key)) {
+    const button = document.querySelector(`[data-key="${key}"]`);
+    button.classList.add('btn-hover');
+    executeKey(key);
+  }
+}
+
+function keyUpped(event) {
+  let key = event.key;
+  key = convertKey(key);
+
+  if (KEYS.includes(key)) {
+    const button = document.querySelector(`[data-key="${key}"]`);
+    button.classList.remove('btn-hover');
+  }
+}
+
 // MISCELLANEOUS
 
 function showResult() {
@@ -98,8 +143,41 @@ function showError() {
 }
 
 function isProperExpression(expression) {
-  const pattern = /\d+[+\u2212\u00d7\u00f7](?:\d)?(?:\.)?\d+/;
+  const pattern = /\d+[+−×÷](?:\d)?(?:\.)?\d+/;
   return expression.match(pattern) ? true : false;
+}
+
+// converts the key that the user pressed to the proper key (e.g. '/' -> '÷')
+function convertKey(pressedKey) {
+  if (pressedKey === '-') return '−';
+  if (pressedKey === 'x' || pressedKey === '*') return '×';
+  if (pressedKey === '/') return '÷';
+  if (pressedKey === 'Enter') return '=';
+  return pressedKey;
+}
+
+function executeKey(key) {
+  if (key === '=') {
+    equalsClicked();
+    return;
+  }
+  if (key === 'Backspace') {
+    deleteClicked();
+    return;
+  }
+  if (key === '.') {
+    decimalClicked();
+    return;
+  }
+  if (key === 'c') {
+    clearClicked();
+    return;
+  }
+  if (OPERATORS.includes(key)) {
+    operatorClicked(key);
+    return;
+  }
+  digitClicked(key);
 }
 
 function isOperator(char) {
@@ -132,9 +210,9 @@ function operate(first, op, second) {
   switch (op) {
     case '+':
       return add(first, second);
-    case '\u2212':
+    case '−':
       return subtract(first, second);
-    case '\u00d7':
+    case '×':
       return multiply(first, second);
     default:
       return divide(first, second);
